@@ -1,0 +1,86 @@
+
+---
+title: "Interactive Map Example in R Markdown and Leaflet"
+output: 
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(leaflet)
+library(htmlwidgets)
+```
+
+# Interactive Map with Leaflet
+
+This page demonstrates how to create an interactive map using R Markdown and Leaflet.
+
+## Basic Map
+
+Here's a simple map centered on New York City:
+
+```{r basic-map}
+# Create a basic leaflet map
+leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap tiles
+  setView(lng = -74.0059, lat = 40.7128, zoom = 13) %>%
+  addMarkers(lng = -74.0059, lat = 40.7128, 
+             popup = "Hello from New York City!")
+```
+
+## Map with Multiple Markers
+
+Let's add several markers for different locations:
+
+```{r multiple-markers}
+# Create sample data
+locations <- data.frame(
+  name = c("Statue of Liberty", "Central Park", "Brooklyn Bridge", "Times Square"),
+  lat = c(40.6892, 40.7829, 40.7061, 40.7580),
+  lng = c(-74.0445, -73.9654, -73.9969, -73.9855),
+  description = c("Famous statue and symbol of freedom",
+                  "Large public park in Manhattan",
+                  "Historic bridge connecting Manhattan and Brooklyn",
+                  "Major commercial intersection and tourist destination")
+)
+
+# Create map with multiple markers
+leaflet(locations) %>%
+  addTiles() %>%
+  setView(lng = -74.0059, lat = 40.7128, zoom = 12) %>%
+  addMarkers(lng = ~lng, lat = ~lat, 
+             popup = ~paste("<b>", name, "</b><br>", description))
+```
+
+
+## Map with Polygons
+
+Here's how to add shapes to your map:
+
+```{r polygon-map}
+# Create a simple polygon (rectangle around Central Park area)
+# Define coordinates as separate vectors
+polygon_lng <- c(-73.9812, -73.9481, -73.9481, -73.9812, -73.9812)
+polygon_lat <- c(40.7681, 40.7681, 40.7955, 40.7955, 40.7681)
+
+leaflet() %>%
+  addTiles() %>%
+  setView(lng = -73.9654, lat = 40.7829, zoom = 14) %>%
+  addPolygons(
+    lng = polygon_lng,
+    lat = polygon_lat,
+    color = "blue",
+    fillColor = "lightblue",
+    fillOpacity = 0.3,
+    popup = "Central Park Area"
+  ) %>%
+  addMarkers(lng = -73.9654, lat = 40.7829, 
+             popup = "Central Park")
+```
+
+---
+
+*This map was created using R Markdown and Leaflet. Last updated: `r Sys.Date()`*
